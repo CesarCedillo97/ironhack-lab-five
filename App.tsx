@@ -28,16 +28,17 @@ export default function App() {
   }, []);
 
   const getUsersList = async (userName: string) => {
+    const lowerCaseUserName = userName.toLowerCase();
     setPageStatus(PageStatus.LOADING);
     const localData = await GetLocalStorageData<User[]>(StorageKeys.USERS);
     if (localData.success && localData.data) {
       const filteredData = localData.data.filter((user: User) =>
-        user.name.toLowerCase().includes(userName)
+        user.name.toLowerCase().includes(lowerCaseUserName)
       );
       setUsersList(filteredData);
       setPageStatus(PageStatus.IDLE);
     } else {
-      const usersResponse = await getUsers({ userName: userName });
+      const usersResponse = await getUsers({ userName: lowerCaseUserName });
       if (usersResponse.success && usersResponse.data) {
         setUsersList(usersResponse.data);
         setPageStatus(PageStatus.IDLE);
